@@ -1,0 +1,11 @@
+<h1>Open reports</h1>
+<% if @reports.empty? %>
+  <p>No open reports.</p>
+<% end %>
+<% @reports.each do |report| %>
+  <article class="card">
+    <p class="meta"><%= report.reportable_type %> #<%= report.reportable_id %> · <%= report.user.username %></p>
+    <p><%= report.reason %></p>
+    <%= button_to "Close", admin_report_path(report), method: :patch %>
+  </article>
+<% end %>

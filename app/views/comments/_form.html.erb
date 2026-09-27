@@ -1,0 +1,6 @@
+<%= form_with model: [post, Comment.new], class: "stack" do |form| %>
+  <%= form.hidden_field :parent_id, value: parent_id %>
+  <%= form.label :body, parent_id ? "Reply" : "Comment" %>
+  <%= form.text_area :body, required: true %>
+  <%= form.submit parent_id ? "Reply" : "Comment", class: "primary" %>
+<% end %>

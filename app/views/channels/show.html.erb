@@ -1,0 +1,8 @@
+<% content_for :title, @channel.name %>
+<h1><%= @channel.name %></h1>
+<p class="muted"><%= @channel.description %></p>
+<p class="muted"><%= link_to "Hot", channel_path(@channel) %> · <%= link_to "New", channel_path(@channel, sort: "new") %></p>
+<% if current_user %>
+  <p><%= link_to "New post", new_post_path(channel: @channel.slug) %></p>
+<% end %>
+<%= render partial: "posts/card", collection: @posts, as: :post %>

@@ -1,0 +1,11 @@
+<article class="post">
+  <p class="meta">
+    <span class="score"><%= post.score %></span>
+    in <%= link_to post.channel.name, channel_path(post.channel) %>
+    · <%= link_to post.user.username, profile_path(post.user.username) %>
+  </p>
+  <h2><%= link_to post.title, post %></h2>
+  <% if (url = external_url(post.link_url)) %>
+    <p><%= link_to url, url, rel: "nofollow noopener" %></p>
+  <% end %>
+</article>

@@ -1,0 +1,9 @@
+<span class="votes">
+  <% if current_user %>
+    <%= button_to "Up", votes_path, method: :post, params: { votable_type: votable.class.name, votable_id: votable.id, direction: "up" }, aria: { pressed: vote_value(votable) == 1 } %>
+    <span class="score"><%= votable.score %></span>
+    <%= button_to "Down", votes_path, method: :post, params: { votable_type: votable.class.name, votable_id: votable.id, direction: "down" }, aria: { pressed: vote_value(votable) == -1 } %>
+  <% else %>
+    <span class="score"><%= votable.score %></span>
+  <% end %>
+</span>
