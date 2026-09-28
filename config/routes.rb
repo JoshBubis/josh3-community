@@ -14,6 +14,10 @@ Rails.application.routes.draw do
   get "norms", to: "pages#norms"
   get "docs/api", to: "pages#api", as: :api_docs
 
+  # Preserved from the previous static site — must keep working after cutover.
+  get "about", to: "pages#about"
+  get "reddit/callback", to: "pages#reddit_callback"
+
   get "settings/profile", to: "profiles#edit", as: :edit_profile
   patch "settings/profile", to: "profiles#update"
   get "u/:username", to: "profiles#show", as: :profile

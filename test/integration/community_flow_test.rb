@@ -79,4 +79,15 @@ class CommunityFlowTest < ActionDispatch::IntegrationTest
     assert_match "[removed]", response.body
     assert_no_match(/555/, response.body)
   end
+
+  test "preserved static pages still serve" do
+    get "/about"
+    assert_response :success
+    assert_match "Reddit script app", response.body
+
+    get "/reddit/callback", params: { code: "abc123" }
+    assert_response :success
+    assert_match "api.josh.menu/webhooks/reddit_oauth", response.body
+    assert_match "noindex", response.body
+  end
 end
