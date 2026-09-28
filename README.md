@@ -30,7 +30,9 @@ User.find_by!(username: "yourname").update!(admin: true)
 docker compose up --build
 ```
 
-The compose file uses a placeholder `SECRET_KEY_BASE`. Replace it before any real deploy. This repo does not cut DNS over to the app.
+The compose file in this repo is only for a laptop. Production is the house
+`~/docker-setup` stack. Preview: https://preview.josh3.com. Runbook:
+[deploy/DEPLOY.md](deploy/DEPLOY.md). josh3.com DNS is unchanged.
 
 ## Tests
 

@@ -1,0 +1,57 @@
+# Deploy josh3-community to the house laptop on push to main.
+# Runner: ~/actions-runners/josh3-community on projects-server (label projects-server).
+# Repo-scoped, so a Lightsail runner with the same label cannot pick this up.
+# Does not change josh3.com DNS. The public check is https://preview.josh3.com
+
+name: Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+concurrency:
+  group: deploy-main
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, projects-server]
+
+    steps:
+      - name: Deploy josh3-community
+        run: |
+          set -e
+          APP_PATH="${JOSH3_COMMUNITY_PATH:-$HOME/josh3-community}"
+          DOCKER_SETUP_PATH="${DOCKER_SETUP_PATH:-$HOME/docker-setup}"
+          echo "→ Pulling latest code..."
+          cd "$APP_PATH" && git fetch origin && git reset --hard origin/main
+          echo "→ Rebuilding and restarting..."
+          cd "$DOCKER_SETUP_PATH"
+          docker compose build josh3-community
+          docker compose up -d josh3-community-db josh3-community
+
+          echo "→ Waiting for app container + database..."
+          ready=0
+          for i in $(seq 1 20); do
+            if docker compose exec -T josh3-community bundle exec rails runner 'ActiveRecord::Base.connection.execute("SELECT 1")' >/dev/null 2>&1; then
+              echo "✓ App + DB reachable (attempt $i)"; ready=1; break
+            fi
+            echo "  not ready yet (attempt $i)..."; sleep 4
+          done
+          if [ "$ready" != "1" ]; then echo "✗ App/DB never became ready"; exit 1; fi
+
+          echo "→ Running migrations..."
+          migrated=0
+          for i in 1 2 3; do
+            if docker compose exec -T josh3-community bundle exec rails db:migrate; then migrated=1; break; fi
+            echo "  migrate attempt $i failed; retrying in 5s..."; sleep 5
+          done
+          if [ "$migrated" != "1" ]; then
+            echo "✗ Migrations failed after retries — current status:"
+            docker compose exec -T josh3-community bundle exec rails db:migrate:status | tail -30 || true
+            exit 1
+          fi
+
+          echo "→ Seeding channels..."
+          docker compose exec -T josh3-community bundle exec rails db:seed
+          echo "→ Deploy complete."
