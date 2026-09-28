@@ -1,0 +1,32 @@
+# Cloudflare Tunnel ingress for josh3.com
+#
+# *** CONFIG FILE ONLY — NOT ACTIVATED. ***
+# Nothing here runs anywhere. Tunnel creation, the credentials file, and the
+# DNS cutover all still need Josh's explicit approval (see deploy/DEPLOY.md).
+#
+# How to activate (later, with Josh):
+#   1. cloudflared tunnel create josh3
+#      → prints the TUNNEL_ID; put it below (both places).
+#   2. Copy the credentials file to /etc/cloudflared/<TUNNEL_ID>.json
+#      (or wherever this host keeps it; update credentials-file to match).
+#   3. cloudflared tunnel route dns <TUNNEL_ID> josh3.com
+#      (and www.josh3.com) — only with Josh's explicit DNS approval.
+#   4. Run cloudflared with this config: cloudflared tunnel --config
+#      /etc/cloudflared/config.yml run <TUNNEL_ID>
+#
+# Service address: use the docker-network form below if cloudflared runs as a
+# container on the same compose network as the app. If cloudflared runs on the
+# host instead, point at the host-mapped port, e.g. http://localhost:3100 —
+# whichever the server-home setup uses. The app container listens on port 80
+# (Thruster) per the Dockerfile.
+
+tunnel: <TUNNEL_ID>
+credentials-file: /etc/cloudflared/<TUNNEL_ID>.json
+
+ingress:
+  - hostname: josh3.com
+    service: http://josh3-community:80
+  - hostname: www.josh3.com
+    service: http://josh3-community:80
+  # Catch-all: anything else gets a 404, never routed to the app.
+  - service: http_status:404
