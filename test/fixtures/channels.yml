@@ -1,0 +1,23 @@
+general:
+  name: General
+  slug: general
+  description: Anything that fits the site.
+  position: 1
+
+ai:
+  name: AI
+  slug: ai
+  description: Artificial intelligence news and tools.
+  position: 2
+
+tech:
+  name: Tech
+  slug: tech
+  description: Software, hardware, and how things are built.
+  position: 3
+
+meta:
+  name: Meta
+  slug: meta
+  description: The site itself.
+  position: 4

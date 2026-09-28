@@ -1,0 +1,12 @@
+<% content_for :title, @user.username %>
+<h1><%= @user.username %></h1>
+<% if @user.avatar.attached? %>
+  <%= image_tag @user.avatar, alt: "", style: "width: 4rem; height: 4rem; object-fit: cover; border-radius: 0.4rem;" %>
+<% end %>
+<% if @user.bio.present? %>
+  <p><%= @user.bio %></p>
+<% end %>
+<% if current_user == @user %>
+  <p><%= link_to "Edit profile", edit_profile_path %></p>
+<% end %>
+<%= render partial: "posts/card", collection: @posts, as: :post %>

@@ -1,0 +1,11 @@
+<h1>Profile</h1>
+<%= form_with model: @user, url: edit_profile_path, method: :patch, class: "stack" do |form| %>
+  <% if @user.errors.any? %>
+    <p class="errors"><%= @user.errors.full_messages.to_sentence %></p>
+  <% end %>
+  <%= form.label :bio %>
+  <%= form.text_area :bio %>
+  <%= form.label :avatar %>
+  <%= form.file_field :avatar, accept: "image/png,image/jpeg,image/gif,image/webp" %>
+  <%= form.submit "Save", class: "primary" %>
+<% end %>

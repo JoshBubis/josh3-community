@@ -1,0 +1,10 @@
+<details>
+  <summary>Report</summary>
+  <%= form_with url: reports_path, class: "stack" do %>
+    <%= hidden_field_tag :reportable_type, reportable.class.name %>
+    <%= hidden_field_tag :reportable_id, reportable.id %>
+    <%= label_tag :reason, "What is wrong?" %>
+    <%= text_area_tag :reason, nil, required: true %>
+    <%= submit_tag "Send report", class: "primary" %>
+  <% end %>
+</details>

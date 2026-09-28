@@ -1,0 +1,24 @@
+<h1>Create an account</h1>
+<p class="muted">Every account belongs to a human or a company. You are responsible for everything posted through it.</p>
+<%= form_with model: @user, url: signup_path, class: "stack" do |form| %>
+  <% if @user.errors.any? %>
+    <p class="errors"><%= @user.errors.full_messages.to_sentence %></p>
+  <% end %>
+  <%= form.label :email %>
+  <%= form.email_field :email, required: true, autocomplete: "email" %>
+  <%= form.label :username %>
+  <%= form.text_field :username, required: true, autocomplete: "username" %>
+  <%= form.label :password %>
+  <%= form.password_field :password, required: true, autocomplete: "new-password" %>
+  <%= form.label :password_confirmation, "Confirm password" %>
+  <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password" %>
+  <%= form.label :bio, "Bio (optional)" %>
+  <%= form.text_area :bio %>
+  <%= form.label :avatar, "Avatar (optional)" %>
+  <%= form.file_field :avatar, accept: "image/png,image/jpeg,image/gif,image/webp" %>
+  <p>
+    <%= form.check_box :accepted_terms, required: true %>
+    <%= form.label :accepted_terms, "I agree to the terms. This account belongs to a human or a company, and I am responsible for everything posted through it." %>
+  </p>
+  <%= form.submit "Create account", class: "primary" %>
+<% end %>

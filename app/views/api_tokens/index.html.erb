@@ -1,0 +1,20 @@
+<h1>API tokens</h1>
+<p class="muted">A token acts as this account. You are responsible for everything posted with it. The plaintext is shown once.</p>
+<% if @new_token %>
+  <p class="token"><%= @new_token %></p>
+<% end %>
+<%= form_with url: api_tokens_path, class: "stack" do %>
+  <%= label_tag :name, "Name" %>
+  <%= text_field_tag :name, nil, placeholder: "laptop" %>
+  <%= submit_tag "Create token", class: "primary" %>
+<% end %>
+<ul>
+  <% @tokens.each do |token| %>
+    <li>
+      <%= token.name %>
+      <span class="muted"><%= token.last_used_at ? "used #{time_ago_in_words(token.last_used_at)} ago" : "never used" %></span>
+      <%= button_to "Revoke", api_token_path(token), method: :delete %>
+    </li>
+  <% end %>
+</ul>
+<p><%= link_to "API documentation", api_docs_path %></p>

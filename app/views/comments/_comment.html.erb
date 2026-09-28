@@ -1,0 +1,17 @@
+<article class="comment" id="comment-<%= comment.id %>">
+  <p class="meta">
+    <%= render "votes/buttons", votable: comment %>
+    <%= link_to comment.user.username, profile_path(comment.user.username) %>
+  </p>
+  <% if comment.removed? %>
+    <p class="muted">A moderator removed this comment.</p>
+  <% else %>
+    <div class="comment-body"><%= markdown(comment.body) %></div>
+    <% if current_user %>
+      <%= render "reports/form", reportable: comment %>
+      <% if current_user.admin? %>
+        <%= button_to "Remove", admin_comment_path(comment), method: :patch, params: { removed: "1" } %>
+      <% end %>
+    <% end %>
+  <% end %>
+</article>

@@ -1,0 +1,9 @@
+<% Array(comments_by_parent[parent_id]).each do |comment| %>
+  <%= render "comments/comment", comment: comment %>
+  <div class="replies">
+    <%= render "comments/thread", comments_by_parent: comments_by_parent, parent_id: comment.id %>
+    <% if current_user && !comment.post.locked? && !comment.removed? %>
+      <%= render "comments/form", post: comment.post, parent_id: comment.id %>
+    <% end %>
+  </div>
+<% end %>

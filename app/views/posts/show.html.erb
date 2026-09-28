@@ -1,0 +1,41 @@
+<% content_for :title, @post.removed? ? "Removed" : @post.title %>
+<article class="post">
+  <p class="meta">
+    <%= render "votes/buttons", votable: @post %>
+    in <%= link_to @post.channel.name, channel_path(@post.channel) %>
+    · <%= link_to @post.user.username, profile_path(@post.user.username) %>
+  </p>
+  <% if @post.removed? %>
+    <h1>[removed]</h1>
+    <p class="muted">A moderator removed this post.</p>
+  <% else %>
+    <h1><%= @post.title %></h1>
+    <% if (url = external_url(@post.link_url)) %>
+      <p><%= link_to url, url, rel: "nofollow noopener" %></p>
+    <% end %>
+    <% if @post.body.present? %>
+      <div class="post-body"><%= markdown(@post.body) %></div>
+    <% end %>
+  <% end %>
+  <% if current_user&.admin? %>
+    <p>
+      <%= button_to(@post.removed? ? "Restore" : "Remove", admin_post_path(@post), method: :patch, params: { removed: @post.removed? ? "0" : "1" }) %>
+      <%= button_to(@post.locked? ? "Unlock" : "Lock", admin_post_path(@post), method: :patch, params: { locked: @post.locked? ? "0" : "1" }) %>
+    </p>
+  <% end %>
+  <% if current_user && !@post.removed? %>
+    <%= render "reports/form", reportable: @post %>
+  <% end %>
+</article>
+
+<% unless @post.removed? %>
+  <h2>Comments</h2>
+  <%= render "comments/thread", comments_by_parent: @comments_by_parent, parent_id: nil %>
+  <% if @post.locked? %>
+    <p class="muted">This post is locked.</p>
+  <% elsif current_user %>
+    <%= render "comments/form", post: @post, parent_id: nil %>
+  <% else %>
+    <p><%= link_to "Log in", login_path %> to comment.</p>
+  <% end %>
+<% end %>

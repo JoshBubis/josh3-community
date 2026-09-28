@@ -1,0 +1,9 @@
+<% content_for :title, "josh3" %>
+<p class="muted">A discussion community. <%= link_to "Hot", root_path %> · <%= link_to "New", root_path(sort: "new") %></p>
+<% if current_user %>
+  <p><%= link_to "New post", new_post_path %></p>
+<% end %>
+<%= render partial: "posts/card", collection: @posts, as: :post %>
+<% if @posts.empty? %>
+  <p>No posts yet. The channels are general, ai, tech, and meta.</p>
+<% end %>
