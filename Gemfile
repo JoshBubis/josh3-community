@@ -21,7 +21,7 @@ gem "jbuilder"
 gem "bcrypt", "~> 3.1.7"
 
 # Markdown for posts and comments. Output is sanitized before display.
-gem "kramdown", "~> 2.5"
+gem "kramdown", "~> 2.6"
 gem "kramdown-parser-gfm", "~> 1.1"
 
 # Generous, documented request limits. The API does not use CAPTCHA.
